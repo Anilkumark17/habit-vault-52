@@ -4,9 +4,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, LogOut, Folder } from "lucide-react";
+import { Plus, LogOut, Folder, Bell, BellOff } from "lucide-react";
 import TaskList from "@/components/TaskList";
 import AddTaskDialog from "@/components/AddTaskDialog";
+import { useTaskNotifications } from "@/hooks/useTaskNotifications";
+import { toast } from "sonner";
 
 interface Task {
   id: string;
@@ -25,6 +27,12 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [loadingTasks, setLoadingTasks] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+    typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted"
+  );
+
+  // Enable task notifications
+  useTaskNotifications(user?.id);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -90,6 +98,29 @@ const Dashboard = () => {
     }
   };
 
+  const handleToggleNotifications = async () => {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      toast.error("Your browser doesn't support notifications");
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      toast.error("Notifications blocked. Enable them in browser settings.");
+      return;
+    }
+
+    if (Notification.permission === "default") {
+      const permission = await Notification.requestPermission();
+      setNotificationsEnabled(permission === "granted");
+      
+      if (permission === "granted") {
+        toast.success("Notifications enabled! 🔔 You'll get alerts when tasks are due.");
+      }
+    } else {
+      toast.info("Notifications are " + (notificationsEnabled ? "enabled" : "disabled"));
+    }
+  };
+
   const dailyTasks = tasks.filter(task => task.type === "DAILY");
   const deadlineTasks = tasks.filter(task => task.type === "DEADLINE");
 
@@ -112,6 +143,18 @@ const Dashboard = () => {
             Task Planner
           </h1>
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleToggleNotifications}
+              title={notificationsEnabled ? "Notifications enabled" : "Enable notifications"}
+            >
+              {notificationsEnabled ? (
+                <Bell className="w-4 h-4 text-primary" />
+              ) : (
+                <BellOff className="w-4 h-4" />
+              )}
+            </Button>
             <Button
               variant="outline"
               size="sm"
