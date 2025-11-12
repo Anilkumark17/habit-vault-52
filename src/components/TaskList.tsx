@@ -1,0 +1,85 @@
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Trash2, Calendar, Clock } from "lucide-react";
+import { format } from "date-fns";
+
+interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  type: "DAILY" | "DEADLINE";
+  deadline: string | null;
+  completed: boolean;
+  time_of_day: string | null;
+}
+
+interface TaskListProps {
+  tasks: Task[];
+  onToggle: (taskId: string, completed: boolean) => void;
+  onDelete: (taskId: string) => void;
+}
+
+const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
+  return (
+    <div className="space-y-3">
+      {tasks.map((task) => (
+        <Card
+          key={task.id}
+          className="p-4 transition-all hover:shadow-md"
+          style={{ 
+            opacity: task.completed ? 0.6 : 1,
+            borderLeft: task.completed ? "4px solid hsl(var(--success))" : "4px solid transparent"
+          }}
+        >
+          <div className="flex items-start gap-3">
+            <Checkbox
+              checked={task.completed}
+              onCheckedChange={(checked) => onToggle(task.id, checked as boolean)}
+              className="mt-1"
+            />
+            
+            <div className="flex-1 min-w-0">
+              <h3 className={`font-semibold ${task.completed ? "line-through text-muted-foreground" : ""}`}>
+                {task.title}
+              </h3>
+              
+              {task.description && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  {task.description}
+                </p>
+              )}
+              
+              <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                {task.type === "DEADLINE" && task.deadline && (
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    <span>{format(new Date(task.deadline), "MMM d, yyyy")}</span>
+                  </div>
+                )}
+                
+                {task.type === "DAILY" && task.time_of_day && (
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    <span>{task.time_of_day}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDelete(task.id)}
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+export default TaskList;
