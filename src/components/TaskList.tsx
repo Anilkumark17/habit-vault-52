@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Trash2, Calendar, Clock } from "lucide-react";
 import { format } from "date-fns";
 
@@ -9,6 +10,7 @@ interface Task {
   title: string;
   description: string | null;
   type: "DAILY" | "DEADLINE";
+  priority: "urgent" | "normal" | "low";
   deadline: string | null;
   completed: boolean;
   time_of_day: string | null;
@@ -19,6 +21,28 @@ interface TaskListProps {
   onToggle: (taskId: string, completed: boolean) => void;
   onDelete: (taskId: string) => void;
 }
+
+const getPriorityColor = (priority: string) => {
+  switch (priority) {
+    case "urgent":
+      return "destructive";
+    case "low":
+      return "secondary";
+    default:
+      return "default";
+  }
+};
+
+const getPriorityLabel = (priority: string) => {
+  switch (priority) {
+    case "urgent":
+      return "🔴 Urgent";
+    case "low":
+      return "🟢 Low";
+    default:
+      return "🟡 Normal";
+  }
+};
 
 const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
   return (
@@ -40,9 +64,14 @@ const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
             />
             
             <div className="flex-1 min-w-0">
-              <h3 className={`font-semibold ${task.completed ? "line-through text-muted-foreground" : ""}`}>
-                {task.title}
-              </h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className={`font-semibold ${task.completed ? "line-through text-muted-foreground" : ""}`}>
+                  {task.title}
+                </h3>
+                <Badge variant={getPriorityColor(task.priority)} className="text-xs">
+                  {getPriorityLabel(task.priority)}
+                </Badge>
+              </div>
               
               {task.description && (
                 <p className="text-sm text-muted-foreground mt-1">

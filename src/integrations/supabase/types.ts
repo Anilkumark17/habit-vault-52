@@ -147,6 +147,7 @@ export type Database = {
           description: string | null
           id: string
           is_active: boolean | null
+          priority: string | null
           time_of_day: string | null
           title: string
           type: string
@@ -161,6 +162,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean | null
+          priority?: string | null
           time_of_day?: string | null
           title: string
           type: string
@@ -175,6 +177,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean | null
+          priority?: string | null
           time_of_day?: string | null
           title?: string
           type?: string

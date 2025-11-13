@@ -58,10 +58,11 @@ export const useTaskNotifications = (userId: string | undefined) => {
             }
           } else if (task.type === "DEADLINE" && task.deadline) {
             const deadline = new Date(task.deadline);
+            const deadlineTime = deadline.toTimeString().slice(0, 5);
             const timeDiff = deadline.getTime() - now.getTime();
             
-            // Notify if deadline is within next 5 minutes
-            if (timeDiff > 0 && timeDiff <= 5 * 60 * 1000) {
+            // Notify at exact deadline time (within same minute)
+            if (timeDiff > 0 && timeDiff <= 60 * 1000 && deadlineTime === currentTime) {
               shouldNotify = true;
             }
           }

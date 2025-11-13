@@ -15,6 +15,7 @@ interface Task {
   title: string;
   description: string | null;
   type: "DAILY" | "DEADLINE";
+  priority: "urgent" | "normal" | "low";
   deadline: string | null;
   completed: boolean;
   completed_at: string | null;
@@ -121,8 +122,13 @@ const Dashboard = () => {
     }
   };
 
-  const dailyTasks = tasks.filter(task => task.type === "DAILY");
-  const deadlineTasks = tasks.filter(task => task.type === "DEADLINE");
+  const sortByPriority = (a: Task, b: Task) => {
+    const priorityOrder = { urgent: 0, normal: 1, low: 2 };
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  };
+
+  const dailyTasks = tasks.filter(task => task.type === "DAILY").sort(sortByPriority);
+  const deadlineTasks = tasks.filter(task => task.type === "DEADLINE").sort(sortByPriority);
 
   if (isLoading || !user) {
     return (

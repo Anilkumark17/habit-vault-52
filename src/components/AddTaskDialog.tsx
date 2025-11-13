@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -18,6 +19,7 @@ const AddTaskDialog = ({ open, onOpenChange, onTaskAdded }: AddTaskDialogProps) 
   const [taskType, setTaskType] = useState<"DAILY" | "DEADLINE">("DAILY");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState<"urgent" | "normal" | "low">("normal");
   const [timeOfDay, setTimeOfDay] = useState("");
   const [deadline, setDeadline] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +37,7 @@ const AddTaskDialog = ({ open, onOpenChange, onTaskAdded }: AddTaskDialogProps) 
         title,
         description: description || null,
         type: taskType,
+        priority,
         completed: false,
       };
 
@@ -61,6 +64,7 @@ const AddTaskDialog = ({ open, onOpenChange, onTaskAdded }: AddTaskDialogProps) 
   const resetForm = () => {
     setTitle("");
     setDescription("");
+    setPriority("normal");
     setTimeOfDay("");
     setDeadline("");
     setTaskType("DAILY");
@@ -112,6 +116,20 @@ const AddTaskDialog = ({ open, onOpenChange, onTaskAdded }: AddTaskDialogProps) 
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="priority">Priority</Label>
+            <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="urgent">🔴 Urgent</SelectItem>
+                <SelectItem value="normal">🟡 Normal</SelectItem>
+                <SelectItem value="low">🟢 Low</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {taskType === "DAILY" ? (
