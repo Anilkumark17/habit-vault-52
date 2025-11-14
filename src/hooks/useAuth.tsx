@@ -31,7 +31,7 @@ export const useAuth = () => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    navigate("/");
+    navigate("/landing");
   };
 
   return { user, session, isLoading, signOut };

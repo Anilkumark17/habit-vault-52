@@ -25,14 +25,14 @@ const Auth = () => {
         password,
         options: {
           data: { name },
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/`,
         },
       });
 
       if (error) throw error;
 
       toast.success("Account created! Welcome aboard 🌱");
-      navigate("/dashboard");
+      navigate("/");
     } catch (error: any) {
       toast.error(error.message || "Failed to sign up");
     } finally {
@@ -53,7 +53,7 @@ const Auth = () => {
       if (error) throw error;
 
       toast.success("Welcome back! 🌞");
-      navigate("/dashboard");
+      navigate("/");
     } catch (error: any) {
       toast.error(error.message || "Failed to sign in");
     } finally {

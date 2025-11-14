@@ -37,7 +37,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate("/auth");
+      navigate("/landing");
     }
   }, [user, isLoading, navigate]);
 
