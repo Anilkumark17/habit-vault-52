@@ -24,7 +24,7 @@ const Categories = () => {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate("/auth");
+      navigate("/landing");
     }
   }, [user, isLoading, navigate]);
 
@@ -78,7 +78,7 @@ const Categories = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-background">
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Button variant="ghost" onClick={() => navigate("/dashboard")}>
+          <Button variant="ghost" onClick={() => navigate("/")}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
