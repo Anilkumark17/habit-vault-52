@@ -75,34 +75,19 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
       const emailHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
-          <div style="background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">🌱 Habit Vault Reminder</h1>
-          </div>
-          
-          <div style="background-color: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <p style="font-size: 18px; color: #374151; margin-bottom: 20px;">Hi ${userName},</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h2 style="color: #333333; margin: 0 0 20px 0;">Task Reminder</h2>
             
-            <div style="background-color: ${task.priority === 'urgent' ? '#FEE2E2' : '#F3F4F6'}; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${task.priority === 'urgent' ? '#EF4444' : '#6366F1'};">
-              <h2 style="color: #1F2937; margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                ${priorityEmoji} ${task.title}
-              </h2>
-              <p style="color: #6B7280; margin: 10px 0;"><strong>Description:</strong> ${task.description || "No description provided"}</p>
-              <p style="color: #6B7280; margin: 10px 0;"><strong>Priority:</strong> <span style="color: ${task.priority === 'urgent' ? '#EF4444' : '#6366F1'}; font-weight: bold;">${urgencyText}</span></p>
-              <p style="color: #6B7280; margin: 10px 0;"><strong>Deadline:</strong> ${formattedDeadline}</p>
+            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+              <p style="margin: 10px 0; color: #333333;"><strong>Task:</strong> ${task.title}</p>
+              <p style="margin: 10px 0; color: #333333;"><strong>Description:</strong> ${task.description || "No description provided"}</p>
+              <p style="margin: 10px 0; color: #333333;"><strong>Urgency:</strong> ${urgencyText}</p>
+              <p style="margin: 10px 0; color: #333333;"><strong>Scheduled At:</strong> ${formattedDeadline}</p>
             </div>
             
-            ${task.priority === 'urgent' 
-              ? '<p style="font-size: 16px; color: #EF4444; font-weight: bold; text-align: center; margin: 20px 0;">⚡ This is urgent! Complete it as soon as possible! ⚡</p>'
-              : '<p style="font-size: 16px; color: #6366F1; text-align: center; margin: 20px 0;">Don\'t forget to complete this task on time! 💪</p>'
-            }
-            
-            <p style="color: #6B7280; font-size: 14px; margin-top: 30px;">
-              Stay organized and productive! 🚀
-            </p>
-            
-            <p style="color: #9CA3AF; font-size: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
-              You're receiving this email because you set a deadline for this task in Habit Vault.
+            <p style="color: #666666; font-size: 14px; margin-top: 20px;">
+              This is an automated reminder for your scheduled task.
             </p>
           </div>
         </div>

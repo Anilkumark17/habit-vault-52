@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Calendar, Clock } from "lucide-react";
+import { Trash2, Calendar, Clock, Pencil } from "lucide-react";
 import { format } from "date-fns";
 
 interface Task {
@@ -20,6 +20,7 @@ interface TaskListProps {
   tasks: Task[];
   onToggle: (taskId: string, completed: boolean) => void;
   onDelete: (taskId: string) => void;
+  onEdit: (task: Task) => void;
 }
 
 const getPriorityColor = (priority: string) => {
@@ -44,7 +45,7 @@ const getPriorityLabel = (priority: string) => {
   }
 };
 
-const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
+const TaskList = ({ tasks, onToggle, onDelete, onEdit }: TaskListProps) => {
   return (
     <div className="space-y-3">
       {tasks.map((task) => (
@@ -96,14 +97,24 @@ const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
               </div>
             </div>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onDelete(task.id)}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            <div className="flex gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEdit(task)}
+                className="hover:bg-secondary"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete(task.id)}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </Card>
       ))}
