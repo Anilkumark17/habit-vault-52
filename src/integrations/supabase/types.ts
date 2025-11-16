@@ -148,6 +148,7 @@ export type Database = {
           id: string
           is_active: boolean | null
           priority: string | null
+          reminded_at: string | null
           time_of_day: string | null
           title: string
           type: string
@@ -163,6 +164,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           priority?: string | null
+          reminded_at?: string | null
           time_of_day?: string | null
           title: string
           type: string
@@ -178,6 +180,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           priority?: string | null
+          reminded_at?: string | null
           time_of_day?: string | null
           title?: string
           type?: string
