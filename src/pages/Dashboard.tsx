@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, LogOut, Folder, Bell, BellOff } from "lucide-react";
 import TaskList from "@/components/TaskList";
 import AddTaskDialog from "@/components/AddTaskDialog";
+import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { useTaskNotifications } from "@/hooks/useTaskNotifications";
 import { toast } from "sonner";
 
@@ -27,6 +28,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(
     typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted"
@@ -97,6 +100,11 @@ const Dashboard = () => {
     } catch (error: any) {
       console.error("Error deleting task:", error);
     }
+  };
+
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setIsEditDialogOpen(true);
   };
 
   const handleToggleNotifications = async () => {
@@ -211,6 +219,7 @@ const Dashboard = () => {
                 tasks={dailyTasks}
                 onToggle={handleTaskToggle}
                 onDelete={handleTaskDelete}
+                onEdit={handleEditTask}
               />
             )}
           </TabsContent>
@@ -232,6 +241,7 @@ const Dashboard = () => {
                 tasks={deadlineTasks}
                 onToggle={handleTaskToggle}
                 onDelete={handleTaskDelete}
+                onEdit={handleEditTask}
               />
             )}
           </TabsContent>
@@ -244,6 +254,15 @@ const Dashboard = () => {
         onTaskAdded={() => {
           fetchTasks();
           setIsAddDialogOpen(false);
+        }}
+      />
+      <EditTaskDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        task={editingTask}
+        onTaskUpdated={() => {
+          fetchTasks();
+          setIsEditDialogOpen(false);
         }}
       />
     </div>
