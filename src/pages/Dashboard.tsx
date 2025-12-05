@@ -4,10 +4,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, LogOut, Folder, Bell, BellOff } from "lucide-react";
+import { Plus, LogOut, Folder, Bell, BellOff, BarChart3 } from "lucide-react";
 import TaskList from "@/components/TaskList";
 import AddTaskDialog from "@/components/AddTaskDialog";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
+import ProductivityChart from "@/components/ProductivityChart";
 import { useTaskNotifications } from "@/hooks/useTaskNotifications";
 import { toast } from "sonner";
 
@@ -21,6 +22,7 @@ interface Task {
   completed: boolean;
   completed_at: string | null;
   time_of_day: string | null;
+  created_at?: string;
 }
 
 const Dashboard = () => {
@@ -83,6 +85,10 @@ const Dashboard = () => {
           ? { ...task, completed, completed_at: completed ? new Date().toISOString() : null }
           : task
       ));
+
+      if (completed) {
+        toast.success("Task completed! 🎉");
+      }
     } catch (error: any) {
       console.error("Error updating task:", error);
     }
@@ -197,9 +203,13 @@ const Dashboard = () => {
         </div>
 
         <Tabs defaultValue="daily" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsList className="grid w-full grid-cols-3 max-w-lg">
             <TabsTrigger value="daily">Daily Tasks</TabsTrigger>
             <TabsTrigger value="deadline">Deadlines</TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-1">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="daily" className="space-y-4">
@@ -220,6 +230,7 @@ const Dashboard = () => {
                 onToggle={handleTaskToggle}
                 onDelete={handleTaskDelete}
                 onEdit={handleEditTask}
+                onRefresh={fetchTasks}
               />
             )}
           </TabsContent>
@@ -242,7 +253,25 @@ const Dashboard = () => {
                 onToggle={handleTaskToggle}
                 onDelete={handleTaskDelete}
                 onEdit={handleEditTask}
+                onRefresh={fetchTasks}
               />
+            )}
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-4">
+            {loadingTasks ? (
+              <p className="text-center text-muted-foreground py-8">Loading analytics...</p>
+            ) : tasks.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">
+                  No data yet 📊
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Add some tasks to see your productivity analytics
+                </p>
+              </div>
+            ) : (
+              <ProductivityChart tasks={tasks} />
             )}
           </TabsContent>
         </Tabs>
